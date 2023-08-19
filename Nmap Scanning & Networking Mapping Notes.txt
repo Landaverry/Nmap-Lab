@@ -1,0 +1,143 @@
+Nmap Scanning & Networking Mapping - 
+
+This project aims to use the Nmap network mapping tool within a Kali Linux to poke around a vulnerable web server & other personal machines that I deployed via virtual box. The goal of this side project is to be able to identify the virtual machine through my Kali Linux instance and explore what vulnerabilities can be exploited. Additionally, I will be exploring the additional options that nmap offers such as OS finger printing and service version detection. 
+
+
+Nmap Port States:
+Open - Acceepting Connection Requests 
+Closed - No Service responding to Requests 
+Filtered - Blocked by a firewall 
+Unfiltered - Accessible,  but scanner was unable to determine whether it was open or closed. 
+
+
+open|filtered - a port may be either open or filtered
+closed|filtered - Port may be either closed or filtered 
+*In both these cases Nmap does not know which of the two is the approrpiate case. 
+
+Testing nmap and scanning the scanme.nmap.org reveals that the following ports are opened:
+Port 22 - TCP OPEN SSH
+Port 80 - TCP OPEN HTTP
+Port 9929 - TCP - OPEN nping-echo
+Port 31337 - TCP - OPEN Elite
+
+
+Specifiying scanning targets 
+- single ip address or DNS Name
+- List of address and names (Seperated by spaces)
+- Range of IP addresses
+- Subnet Mask 
+- File Containing addresses and names. 
+
+nmap scanning for mutiple ips
+nmap 192.168.1.1,2,3,4,5,6,etc. 
+nmap 192.168.1.1-6
+
+defining a range using a subnet mask 
+nmap 192.168.1.0/24
+
+Scanning a list of address from file. 
+nmap -iL file.txt
+
+Nmap IPV6 Scanning:
+Much longer than Dotted Quad Notation. 
+nmap -6 #IP v6 Address#
+
+Nmap Host Discovery Techniques 
+-Identify active systems 
+-Attempts to figure out if an address is active before scanning ports on the system. This is because port scanning can become time consuming. 
+
+-By Default, host discover is performed on remote systems using ICMP Echo Request (Ping), TCP Scans of ports 80 & 443, and ICMP Timestamp request. 
+
+- If Nmap does not recieve a response from any of the above requests it will assume that no system is present and does not perform a port scan. 
+
+-For local network systems, Nmap will always try an ARP scan. 
+
+Host Discovery Flags:
+-Pn - No Host Discovery
+-PS - TCP SYN Request
+-PA - TCP ACK Request
+-PU - UDP Request
+-PE - ICMP Echo Request
+-PR - ARP Request
+
+DNS Resolution:
+-Adds information, but consumes time.
+-n flag disables reverse DNS Resolution. 
+--System-dns flag uses the OS' DNS capabilities 
+--dns-servers flag allows manual specification of DNS Servers
+
+TCP Scanning with Nmap: 
+- TCP SYN Scan - Works Quickly & Effeciently. Sends a Connection request that never completes
+-sS Flag used & is the default scan type for root users. 
+
+TCP Connect Scan: 
+-Sends a connection request that is completed
+-sT flag
+-Default scan type for non-root users. 
+
+TCP Scan Types: 
+-sS - TCP SYN Scan
+-sT - TCP Connect Scan 
+-sN - TCP NULL Scan 
+-sF - TCP FIN Scan
+-sX - TCP Xmas Scan 
+-sA - TCP ACK Scan
+-sW - TCP Window Scan
+-sM - TCP Maimon Scan
+
+
+UDP Scanning with Nmap: 
+UDP ports are different from TCP ports. 
+However UDP scans works similarly to TCP Scanning
+-sU Flag for UDP Scans. 
+
+Port Selection: 
+Control Scan behavior.
+Nmap Scans the 1,000 most commonly used TCP ports. This can be Time Consuming! 
+-F flag requests a fast scan. - Top 100 TCP ports. 
+-p flag allows specific ports to be listed for scanning. 
+-p- flag requests a full TCP scan of the target system(s)
+
+Controlling Scan Speeds: 
+- Slow down scans to minimize disruptions or hide scans. 
+- Speed scans to complete faster. 
+- Many aspects of nmap timings can be changed. 
+-Timing Templates: 
+	-T Flag
+	-T5 - Insane 
+	-T4 - Aggressive
+	-T3 - Normal
+	-T2 - Polite 
+	-T1 - Sneaky
+	-T0 - Paranoid (Super Slow - Almost Useless)
+
+
+Nmap Fingerprinting: 
+-Nmap is able to proble and fingerprint systems. 
+-OS Detection - Guessing the target OS
+-Activate OS detection using -O flag. 
+
+Service Version Detection: 
+-Analyze services running on an open port
+-Gathers information from Service banner and network behavior to determine software and version number
+-sV flag
+
+-A Option
+- Remote Operating system Dectection
+- Service and Version Detection
+- Traceroute performed. 
+- Nmap Scripting Engine (NSE)
+
+Nmap Output Formats: 
+-oN - Human-Readable Text File 
+-oX - Machine-readable XML File
+-oG - Grepable Text file
+
+Verbose Mode: 
+-v Flag 
+As the scan is running Nmap displays what is going on:
+- ARP Scans 
+- NSEs
+-Etc. 
+
+-vv - Very Verbose Flag.
